@@ -1,30 +1,43 @@
-# Automatically build the project and run any configured tests for every push
-# and submitted pull request. This can help catch issues that only occur on
-# certain platforms or Java versions, and provides a first line of defence
-# against bad commits.
+name: Build Minecraft Mod
 
-name: build
-on: [pull_request, push]
+on:
+  push:
+    branches: [ "main", "master" ] # Startet den Build, sobald du Code auf diese Branches pushst
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # Erlaubt es dir, den Build manuell auf GitHub per Knopfdruck zu starten
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
+
     steps:
-      - name: checkout repository
-        uses: actions/checkout@v6
-      - name: validate gradle wrapper
-        uses: gradle/actions/wrapper-validation@v6
-      - name: setup jdk
-        uses: actions/setup-java@v5
-        with:
-          java-version: '25'
-          distribution: 'microsoft'
-      - name: make gradle wrapper executable
-        run: chmod +x ./gradlew
-      - name: build
-        run: ./gradlew build
-      - name: capture build artifacts
-        uses: actions/upload-artifact@v7
-        with:
-          name: Artifacts
-          path: build/libs/
+    # 1. Code aus dem GitHub-Repository herunterladen
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # 2. Die passende Java-Version installieren (Java 21/25 für neuere Minecraft-Versionen)
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: '25'
+        distribution: 'temurin'
+
+    # 3. Gradle-Umgebung einrichten und Caching aktivieren (beschleunigt zukünftige Builds)
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+
+    # 4. Der Gradle-Datei Ausführungsrechte unter Linux geben
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    # 5. Den eigentlichen Build-Prozess starten
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    # 6. Die fertige .jar-Datei als Download-Artefakt hochladen
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Fabric-Mod-Output
+        path: build/libs/*.jar
