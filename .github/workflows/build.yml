@@ -2,40 +2,37 @@ name: Build Minecraft Mod
 
 on:
   push:
-    branches: [ "main", "master" ] # Startet den Build, sobald du Code auf diese Branches pushst
+    branches: [ "main", "master" ]
   pull_request:
     branches: [ "main", "master" ]
-  workflow_dispatch: # Erlaubt es dir, den Build manuell auf GitHub per Knopfdruck zu starten
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Code aus dem GitHub-Repository herunterladen
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 2. Die passende Java-Version installieren (Java 21/25 für neuere Minecraft-Versionen)
+    # Hier nutzen wir nun Java 17 passend zu Minecraft 1.20.4 und Gradle 8.7
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:
-        java-version: '25'
+        java-version: '17'
         distribution: 'temurin'
 
-    # 3. Gradle-Umgebung einrichten und Caching aktivieren (beschleunigt zukünftige Builds)
+    private-setup-gradle:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
 
-    # 4. Der Gradle-Datei Ausführungsrechte unter Linux geben
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # 5. Den eigentlichen Build-Prozess starten
     - name: Build with Gradle
       run: ./gradlew build
 
-    # 6. Die fertige .jar-Datei als Download-Artefakt hochladen
+     Tar-Archiv erstellen und hochladen
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
