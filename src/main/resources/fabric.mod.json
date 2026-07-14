@@ -1,16 +1,27 @@
 {
-  "schemaVersion": 1,
-  "id": "pocmod",
-  "version": "1.0.0",
-  "name": "AntiCheat PoC Mod",
-  "entrypoints": {
-    "client": [
-      "net.pocmod.utility.PoCUtilityMod"
-    ]
-  },
-  "depends": {
-    "fabricloader": ">=0.15.0",
-    "minecraft": "~1.20.4",
-    "fabric-api": "*"
-  }
+	"schemaVersion": 1,
+	"id": "pocmod",
+	"version": "${version}",
+	"name": "AntiCheat PoC Mod",
+	"description": "Ein modulares PoC-Utility-Mod-Framework zum Testen von Anti-Cheats.",
+	"authors": [
+		"Du"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"net.pocmod.utility.PoCUtilityMod"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.15.0",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
 }
